@@ -24,5 +24,17 @@ jobs:
       - name: Compose up containers
         run: docker compose up -d
 
+      - name: Wait for API
+        run: |
+          for i in {1..30}; do
+            if curl -f http://localhost:3000/api/ ; then
+              exit 0
+            fi
+            echo "API not ready yet..."
+            sleep 2
+          done
+          echo "API did not start in time"
+          exit 1
+
       - name: Test API
-        run: curl http://localhost:3000/api/
+        run: curl -f http://localhost:3000/api/
