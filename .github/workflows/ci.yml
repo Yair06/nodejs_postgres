@@ -42,3 +42,17 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             whoami
+            echo "Login to Docker Hub..."
+            echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+            
+            echo "Pull latest image..."
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/my-app-backend:latest
+            
+            echo "Stop existing container if running..."
+            docker stop my-app-backend || true
+            docker rm my-app-backend || true
+            
+            echo "Run new container..."
+            docker run -d --name my-app-backend -p 3000:3000 ${{ secrets.DOCKERHUB_USERNAME }}/my-app-backend:latest
+            
+            echo "Deployment completed!"
