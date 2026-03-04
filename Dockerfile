@@ -7,17 +7,15 @@ WORKDIR /app
 # Copier package.json et package-lock.json AVANT pour optimiser le cache
 COPY package*.json ./
 
-# Installer les dépendances
-RUN npm install
+# Installer uniquement les dépendances de production (plus léger et sécurisé)
+RUN npm install --omit=dev
 
-# Copier TOUT le code APRÈS l'installation (évite de refaire npm install à chaque build)
+# Copier TOUT le code APRÈS l'installation
 COPY . .
 
-# Installer nodemon globalement
-RUN npm install -g nodemon
+# Exposer le port de l'application (doit correspondre au port dans ton code Node.js)
+EXPOSE 3000
 
-# Exposer le port de l'application
-EXPOSE 3001
-
-# Commande de démarrage avec Nodemon
-CMD ["npm", "run", "dev"]
+# Commande de démarrage standard pour la production
+# (Remplace "index.js" par le nom de ton fichier principal, ex: "server.js", "app.js")
+CMD ["node", "index.js"]
