@@ -53,9 +53,6 @@ jobs:
             docker rm my-app-backend || true
             
             echo "Run new container..."
-            docker run -d --name my-app-backend -p 3000:3000 \
-              -e DATABASE_URL="${{ secrets.DATABASE_URL }}" \
-              -e NODE_ENV="production" \
-              ${{ secrets.DOCKERHUB_USERNAME }}/my-app-backend:latest
+            docker run -d --name my-app-backend -p 3000:3000 ${{ secrets.DOCKERHUB_USERNAME }}/my-app-backend:latest
             
             echo "Deployment completed!"
